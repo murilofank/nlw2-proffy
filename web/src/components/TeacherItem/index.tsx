@@ -2,33 +2,55 @@ import React from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
+import api from '../../services/api';
+
 import './styles.css';
 
-function TeacherItem() {
+export interface Teacher {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id,
+        })
+    }
+
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://instagram.fpoa5-1.fna.fbcdn.net/v/t51.2885-19/s150x150/103363990_288801115606316_7255679073316599334_n.jpg?_nc_ht=instagram.fpoa5-1.fna.fbcdn.net&_nc_ohc=qgQDeT9S0McAX_xFzhG&oh=98e1d6cd08faccf61c5ef4c430227094&oe=5F529A0B" alt="Murilo Fank" />
+                <img src={teacher.avatar} alt={teacher.name} />
                 <div>
-                    <strong>Murilo Fank</strong>
-                    <span>Programação</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
-            <p>
-                Entusiasta das melhores tecnologias de programação
-                        <br /><br />
-                        Apaixonado por criar front-end de sites e fazer com que as pessoas tenham uma boa experiência ao navegarem pelo vasto mundo da internet
-                    </p>
+
+            <p>{teacher.bio}</p>
 
             <footer>
                 <p>
                     Preço/Hora
-                            <strong>R$ 80,00</strong>
+                            <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a target="_blank"
+                    onClick={createNewConnection}
+                    href={`https://wa.me/${teacher.whatsapp}`}
+                >
                     <img src={whatsappIcon} alt="WhatsApp" />
-                            Entrar em contato
-                        </button>
+                    Entrar em contato
+                </a>
             </footer>
         </article>
     )
